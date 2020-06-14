@@ -1,0 +1,208 @@
+/**********************************************************
+* Project 1 Part 3: Ricochet Robots
+* Comp 15
+* README
+* Name: Qijin Chau
+* Date: 10/23/19
+*********************************************************/
+
+Compile/run:
+     - Compile using
+            make gorobots
+            make tests
+     - run executable with
+            ./gorobots [board input file] 
+            ./tests
+
+Note: The tests file is executed using mainly with TrappedBoard.txt
+      as the main sample board testing each function therefore an input
+      file is not required.
+
+
+Program Purpose:
+
+	Part 2 of Project 1 handles reading in a file from the command 
+line, storing the board in an instance of my Board class, and 
+properly printing out a board. Also, learning how to design and 
+modularize code and start code from scratch. Part 3 of Project 1 adds
+to these ideas by also adding in a robot object into the board, moving
+the robot, and determining when the robot reaches the target. Furthermore,
+part 3 introduces our first exposure to trees and searching through the
+tree in order to find a solution to the game (if there is one).
+
+
+Acknowledgements: I played and learned more about Ricochet Robots by 
+playing the game on the link provided on the spec.
+http://www.robotreboot.com/classic
+I did not go into office hours however I did attend the Tree workshop
+and took some notes which helped me write my Tree.h and some functions
+for Tree.cpp.
+
+
+Files: 
+
+main.cpp:
+        Main file should be handle reading in a file for the board 
+        and running an interactive or automatic mode. 
+
+unitTests.cpp:
+        The second Main file which contains and handles my unit testing
+        besides the testing from interactive mode.    
+
+Board.cpp:
+        Implementation of Board class. Main functionality of running 
+        the Ricochet Robot. Should be able to read in a board, print 
+        the board, insert a robot, and move the robot around the board.
+
+Board.h:
+        Interface of Board class. Contains the Robot object.
+
+Tree.cpp:
+        Implementation of Tree class. Should be able to create a tree 
+        and find one path that allows for a solution.
+
+Tree.h:
+        Interface of Tree class. 
+
+TrappedBoard.txt:
+		sample board provided for this project.
+
+nowalls.txt
+		sample board provided for this project.
+
+myWalls.txt
+        a sample board that I created for this project.
+
+fourStepSol.txt:
+		sample board provided for this project.
+
+line_of_horizontal_pieces
+		sample board provided for this project.
+
+Line_of_vertical_pieces
+		sample board provided for this project.
+
+the_gorobots:
+        reference implementation for students to see how the program should 
+        handle all cases.
+
+
+Data Structures:
+---------------
+    The main data structures of part 2 of project 1 are 2-D arrays, 
+structs, a class to hold everything. I am using row and column coordinates
+for my 2-D array rather than Cartesian coordinates.
+    I created a struct for the Robot in my Board class. The robot struct has
+six data members. One string, four integers, and a bool. The string is for the
+symbol that represents the robot. The integers are for the robots location.
+There is row and column and row in the board and column in the board. The
+difference between them are that the integers row and column represent the
+robot's location on an 8x8 grid which don't include the walls. The integers
+row in board and column in board represent the robot's location on the
+actual board that is stored in my class instance. The stored board is a
+2-D array with 15 rows and 29 columns however is declared with the static 
+constant of 16 rows and 30 columns because the board is 1-index 
+rather than 0-index. The columns include the spaces in between each cell and 
+placeholder value/wall in the board files while the rows just include the 
+cells and the placeholder values/walls. Lastly, the bool is to 
+indicate whether the robot has reached the targer. If the robot is at the 
+target then the bool will be true.
+	In the class I declared a 2-D string array to represent the board
+and a robot object.
+	I decided to put the robot in the Board class rather than creating a
+separate class for it because I thought placing it in the Board class would
+allow for easy access to check whether it can move in a certain directions.
+Also, putting the robot in the Board class would making accessing data less
+complicated because now you have one class with both the robot, its functions,
+the board, and its functions.
+	Drawbacks of my data structure design is that placing the robot and 
+board in the same class decreases modularity and data abstraction. Also,
+the dimensions of my board are a little weird and can be considered confusing.
+I decided against having a simply 8x8 board or a 15x15 board. I decided to
+keep the spaces because this made reading in a board file less complicated
+also it just made more sense in my mind as I was brainstorming and 
+implementing.
+	The main data structure of part 3 of project 1 is a tree with four nodes
+to four different possible directions. Also, the tree has a maximum height
+of seven which is declared in the tree class.
+	Each node of the tree has a string data member and four pointers. Each
+pointer points to one of four directions that the robot can move. When a tree
+is created, the makeTree functions creates an entire tree with height of seven.
+The tree contains every single combination of moves that the robot can do in
+seven moves. This includes repeated moves like if the robot moves north seven
+times in a row. Using all of these children, my find function finds the first
+solution to the board given the robot's initial position, assuming there is a
+solution. If there is no solution, then false is returned. The function does 
+this by using the string in each node and moving the robot using each 
+character in the string and seeing if the final position of the robot is at 
+the target. Initially, I had the find function go through the entire tree and 
+find every solution. Since we only needed one solution, I added "return true" 
+after each recursion function call. This allowed for all recursion to end and 
+the function to return true once the first instance of a solution is found. 
+Inside the find function, I print out the first solution to standard cout 
+as well. 
+	Drawback of this data structure design is that it has a bunch of
+redundant moves. Therefore when printing out a solution, a lot of the time,
+the solution would have a bunch of "North"'s first simply because my find 
+function first looks at the last children of the north path which would be
+7 North's to get there. Then, from there it looks to South, East, then West,
+then recurses. To optimize this tree, I could have stopped creating 
+children in the same direction as the previous move. This would have saved
+allocated space. 
+
+Testing:
+	For Part 2 of Project 1 I tested my functions through a series
+of unit tests. I included these unit tests in the unitTest.cpp file.  
+These unit tests were pretty simple and mainly tested all of functions in
+Board.cpp. For Part 2, I focused on reading in any board file properly and
+printing it correctly to standard cout. Therefore for the reading in a board 
+test, I ran it five separate times. Each time with a different sample board. 
+First, I used the TrappedBoard.txt which is also the sample board I tested my 
+other functions with. Second, I tested nowalls.txt, then fourStepSol.txt, then 
+line_of_horizontal_pieces.txt. Lastly, I tested Line_of_vertical_pieces.txt".
+My read board unit test also includes testing my print board function
+therefore I was able to test both read and print with the same unit test. I
+decided that testing them separately would be kind of pointless because I
+would basically have to check each cell to make sure my read function works
+properly and I can just do this by making the print function and testing them
+at the same time.
+	I ran into some bugs with my read board function. Most of them involved 
+seg faults. There were a few errors with incorrect spacing and new lines.
+In the end, I resolved all these bugs by deciding to read in everything into
+my board including all the spaces. By doing this I had to increase the size of
+my board. Even though I read in every character from the board file to my
+board instance, I decided to print only what was important. I believed 
+adding this abstraction made my 2-D array design reasonable.
+	My move robot tests, tested both running the robot into a wall and into
+the edge of the board.
+
+	For Part 3 of Project 1 I tested my find function by printing out the 
+path of the node or the board to standard output at various locations in 
+the function. For example, once a true is returned or not returned.
+For Part 3, I added a returnToStart function which returns the robot to its
+original position. After implementing my tree and all its functions, I 
+tested it using the auto mode in main. I checked my answers with the
+solution checker and made sure they're all valid. I tested multiple
+positions on every one of the test boards to make sure my tree and auto
+functions works with all of the boards and not just one. I tested the
+auto mode with the robot cornered by walls, in the middle of the board,
+on the sides of the board, when it starts already at the target, and when 
+the robot is trapped inside the cell of TrappedBoard.txt and can't move. 
+I also made and included a test board of my own which tests to make sure 
+the robot can go seven moves without having to go north first. The row
+and column that was/needs to be tested in this file is (2,2). 
+
+	I ended up running into a bug with my returnToStart function, I forgot
+to return the target to its original spot if the robot reaches the target.
+When testing the overall tree and auto mode with some edge cases, I ran into
+a mistake in my code for when the robot would start at the target. This was
+a minor fix however and I simply had to change a few lines to fix this. 
+
+
+Note:   
+	If a non-integer is entered when the interactive mode prompts for 
+	a starting row and column for the robot, then my program will crash.
+    
+    If an input other than "AUTO" or "INTER" is entered, then my program
+    will end.
+ 
