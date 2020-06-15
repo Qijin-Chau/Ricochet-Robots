@@ -14,9 +14,8 @@ Compile/run:
             ./gorobots [board input file] 
             ./tests
 
-Note: The tests file is executed using mainly with TrappedBoard.txt
-      as the main sample board testing each function therefore an input
-      file is not required.
+Note: The tests file is executed using TrappedBoard.txt as the main sample board 
+      testing each function therefore an input file is not required.
 
 
 Program Purpose:
